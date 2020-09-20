@@ -26,9 +26,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\LICENSE" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
+    <None Include="..\LICENSE" />
   </ItemGroup>
 </Project>

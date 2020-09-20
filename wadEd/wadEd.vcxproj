@@ -132,7 +132,9 @@
     <ClInclude Include="wad.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\LICENSE" />
+    <None Include="..\LICENSE">
+      <FileType>Document</FileType>
+    </None>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="wad.cpp" />
   </ItemGroup>
