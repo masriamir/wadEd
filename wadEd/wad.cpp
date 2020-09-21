@@ -131,6 +131,9 @@ int write_lump(const uint32_t lump, FILE *file) {
 
     /* read lump data into buffer */
     if (read_lump(buf, lump) == -1) {
+        free(buf);
+        buf = NULL;
+
         fprintf(stderr, "unable to load lump %u for writing\n", lump);
         return -1;
     }
