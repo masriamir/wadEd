@@ -180,18 +180,6 @@ int get_lump_num(const char *name) {
 
 void list_lumps(void) {
     for (size_t i = 0; i < numlumps; i++) {
-        /* check if lump name is null-terminated */
-        if (filelumps[i].name[LUMP_NAME_SZ] != '\0') {
-            /* create new string with original text plus a terminating NULL */
-            char fixed[LUMP_NAME_SZ + 1];
-            strncpy(fixed, filelumps[i].name, sizeof(fixed) - 1);
-            fixed[LUMP_NAME_SZ] = '\0';
-
-            printf("name: %s, ", fixed);
-        } else {
-            printf("name: %s, ", filelumps[i].name);
-        }
-
-        printf("size: %d, offset: %d\n", filelumps[i].size, filelumps[i].filepos);
+        printf("name: %.*s, size: %d, offset: %d\n", LUMP_NAME_SZ, filelumps[i].name, filelumps[i].size, filelumps[i].filepos);
     }
 }
