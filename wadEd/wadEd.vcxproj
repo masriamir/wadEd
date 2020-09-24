@@ -85,6 +85,7 @@
       </MinimalRebuild>
       <SmallerTypeCheck />
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -118,6 +119,7 @@
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <SmallerTypeCheck />
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,6 +138,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <WarningLevel>Level3</WarningLevel>
       <LanguageStandard>stdcpp14</LanguageStandard>
+      <EnforceTypeConversionRules>true</EnforceTypeConversionRules>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
