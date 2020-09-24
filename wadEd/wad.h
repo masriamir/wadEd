@@ -20,7 +20,7 @@ typedef struct filelump_t {
     char name[LUMP_NAME_SZ];
 } filelump_t;
 
-extern FILE *fd; /* wad file */
+extern FILE *fp; /* wad file */
 extern uint32_t numlumps; /* number of lumps in wad */
 extern filelump_t *filelumps; /* lump info directory */
 
