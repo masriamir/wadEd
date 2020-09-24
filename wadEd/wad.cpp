@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "memory.h"
+
 #include "wad.h"
 
 FILE *fp;
