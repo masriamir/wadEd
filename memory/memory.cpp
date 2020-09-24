@@ -11,6 +11,12 @@
 
 int new_chunk(memory_t* mc, const uint32_t size)
 {
+    /* make sure size is valid */
+    if (size < 1) {
+        fprintf(stderr, "memory_t:new_memory_t - invalid size\n");
+        return -1;
+    }
+
     /* allocation memory for memory_t */
     if (!(mc = (memory_t*)malloc(sizeof(*mc)))) {
         fprintf(stderr,
@@ -22,17 +28,10 @@ int new_chunk(memory_t* mc, const uint32_t size)
     mc->ptr = 0;
     mc->size = size;
 
-    /* make sure size is valid */
-    if (size > 0) {
-        /* if we cannot allocate the data set it to NULL */
-        if (!(mc->data = (uint8_t*)malloc(size))) {
-            fprintf(stderr,
-                "memory_t:new_memory_t - data allocation failed\n");
-            mc->data = NULL;
-            return 1;
-        }
-    }
-    else {
+    /* if we cannot allocate the data set it to NULL */
+    if (!(mc->data = (uint8_t*)malloc(size))) {
+        fprintf(stderr,
+            "memory_t:new_memory_t - data allocation failed\n");
         mc->data = NULL;
         return 1;
     }
@@ -69,7 +68,9 @@ bool free_chunk(memory_t* mc)
 
 bool resize_chunk(memory_t* mc, const uint32_t new_size)
 {
+    /* make sure size is valid */
     if (new_size < 1) {
+        fprintf(stderr, "memory_t:resize_chunk - invalid size\n");
         return false;
     }
 
@@ -77,10 +78,10 @@ bool resize_chunk(memory_t* mc, const uint32_t new_size)
     uint8_t* tmp_data = (uint8_t*)realloc(mc->data, new_size);
 
     if (tmp_data) {
-        free_chunk_data(mc);
         mc->data = tmp_data;
     }
     else {
+        free(mc->data);
         fprintf(stderr,
             "memory_t:resize_chunk - allocation of %u bytes failed\n",
             new_size);
