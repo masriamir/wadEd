@@ -67,8 +67,8 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "TODO: <Company name>"
-            VALUE "FileDescription", "TODO: <File description>"
+            VALUE "CompanyName", "Amir Masri"
+            VALUE "FileDescription", "CLI tool for interacting with WAD files."
             VALUE "FileVersion", "0.1.0.0"
             VALUE "InternalName", "wadEd.exe"
             VALUE "LegalCopyright", "Copyright (C) 2020"
