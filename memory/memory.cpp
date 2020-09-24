@@ -33,6 +33,7 @@ int new_chunk(memory_t* mc, const uint32_t size)
         fprintf(stderr,
             "memory_t:new_memory_t - data allocation failed\n");
         mc->data = NULL;
+        mc->size = 0;
         return 1;
     }
 
