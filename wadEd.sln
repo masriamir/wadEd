@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wadEd", "wadEd\wadEd.vcxproj", "{14BD5A71-C854-4659-9641-AB5FC7188295}"
+	ProjectSection(ProjectDependencies) = postProject
+		{410A1378-A3E1-42D5-9468-D208D575403E} = {410A1378-A3E1-42D5-9468-D208D575403E}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "memory", "memory\memory.vcxproj", "{410A1378-A3E1-42D5-9468-D208D575403E}"
 EndProject
