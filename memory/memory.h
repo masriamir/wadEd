@@ -9,7 +9,7 @@ typedef struct memory_t {
     uint8_t* data;
 } memory_t;
 
-memory_t* new_chunk(const uint32_t);
+int new_chunk(memory_t*, const uint32_t);
 bool free_chunk_data(memory_t* const);
 bool free_chunk(memory_t*);
 
