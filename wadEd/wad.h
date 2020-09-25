@@ -2,6 +2,9 @@
 #define __WADED_WAD_H__
 
 #include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define WAD_ID_SZ 4 /* wad file id length */
 #define LUMP_NAME_SZ 8 /* lump name length */

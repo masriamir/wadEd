@@ -1,12 +1,6 @@
 #include "pch.h"
 #include "framework.h"
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "memory.h"
 
 int new_chunk(memory_t* mc, const uint32_t size)
