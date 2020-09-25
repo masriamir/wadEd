@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __WADED_MEMORY_H__
+#define __WADED_MEMORY_H__
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -27,3 +28,5 @@ bool read_chunk_ofs(void* const,
 
 bool write_chunk(memory_t*, const void*, const uint32_t);
 bool write_chunk_ofs(memory_t*, const void*, const uint32_t, const uint32_t);
+
+#endif
