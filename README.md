@@ -1,4 +1,4 @@
-# wadEd
+# cumin
 
 A simple command-line utility to print `lump` information for a given `WAD` file.
 
