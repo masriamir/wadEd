@@ -1,5 +1,5 @@
-#ifndef __WADED_WAD_H__
-#define __WADED_WAD_H__
+#ifndef WADED_WAD_H
+#define WADED_WAD_H
 
 #include <stdint.h>
 #include <stdio.h>
