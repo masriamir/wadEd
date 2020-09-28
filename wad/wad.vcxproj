@@ -17,8 +17,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{14BD5A71-C854-4659-9641-AB5FC7188295}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>wadEd</RootNamespace>
+    <RootNamespace>wad</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>wad</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
