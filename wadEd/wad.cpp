@@ -1,4 +1,3 @@
-#include "memory.h"
 #include "wad.h"
 
 FILE *fp;
