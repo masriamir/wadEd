@@ -38,10 +38,11 @@ namespace wad
     private:
         //TODO: bool valid_type();
 
+        std::string filename;
         std::ifstream fp; /* underlying file stream */
-        Wadinfo wadinfo;
-        std::vector<Filelump> lump_directory;
-        Wad_type type;
+        //Wadinfo wadinfo;
+        //std::vector<Filelump> lump_directory;
+        //Wad_type type;
     };
 }
 
