@@ -1,197 +1,63 @@
 #include "wad.h"
 
-wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{filename, std::ios::binary}
+wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{filename, std::ios::binary}, wadinfo_{},
+                                                       type_{}
 {
     if (!fp_) {
-        throw std::runtime_error{"could not open " + filename};
+        throw std::runtime_error{"Could not open " + filename + "."};
+    }
+
+    fp_.read(reinterpret_cast<char*>(&wadinfo_), sizeof(Wadinfo));
+
+    if (id() == nm_iwad) {
+        type_ = Wad_type::iwad;
+    }
+    else if (id() == nm_pwad) {
+        type_ = Wad_type::pwad;
+    }
+    else {
+        throw std::runtime_error{"Not a valid WAD."};
     }
 }
 
-const std::string& wad::Wad_file::filename() const
+std::string_view wad::Wad_file::filename() const
 {
     return filename_;
 }
 
-/*TODO: refactor
-FILE *fp;
-uint32_t numlumps;
-filelump_t *filelumps;
-
-int load_wad(const char *filename) {
-    // open wad file to read
-    fp = fopen(filename, "rb");
-    if (!fp) {
-        perror("unable to open file");
-        return -1;
-    }
-
-    // read the header bytes
-    wadinfo_t wad;
-    if (fread(&wad, sizeof(wad), 1, fp) != 1) {
-        perror("error reading wad header");
-        return -1;
-    }
-
-    // make sure file is a valid wad
-    if (valid_wad(wad.identification) != 0) {
-        fprintf(stderr, "invalid wad file\n");
-        return -1;
-    }
-
-    // set number of lumps found in wad
-    numlumps = wad.numlumps;
-
-    // seek to beginning of lump info directory
-    if (fseek(fp, wad.infotableofs, SEEK_SET) != 0) {
-        perror("unable to find start of info table");
-        return -1;
-    }
-
-    // allocate memory for lump info directory
-    if (!(filelumps = (filelump_t *) malloc(numlumps * sizeof(*filelumps)))) {
-        fprintf(stderr, "unable to allocate memory for lump info directory\n");
-        return -1;
-    }
-
-    // read lump info directory table in wad
-    for (size_t i = 0; i < numlumps; i++) {
-        // check for valid read
-        if (fread(&filelumps[i], sizeof(*filelumps), 1, fp) != 1) {
-            // check errors
-            if (feof(fp)) {
-                perror("premature end of file");
-            } else if (ferror(fp)) {
-                perror("error reading lump");
-            }
-
-            // cleanup
-            free_wad();
-            return -1;
-        }
-    }
-
-    return 0;
+std::string_view wad::Wad_file::id() const
+{
+    return std::string_view{wadinfo_.identification.data(), sz_wad_id};
 }
 
-void free_wad() {
-    // free lump info directory and close wad file
-    if (filelumps) {
-        free(filelumps);
-        filelumps = NULL;
-    }
-    fclose(fp);
-    numlumps = 0;
+const wad::Wadinfo& wad::Wad_file::wadinfo() const
+{
+    return wadinfo_;
 }
 
-int read_lump(void *dest, const uint32_t lump) {
-    // check for valid destination buffer
-    if (!dest) {
-        fprintf(stderr, "invalid read destination\n");
-        return -1;
-    }
-
-    // check for valid lump number
-    if (lump >= numlumps) {
-        fprintf(stderr, "invalid lump %u\n", lump);
-        return -1;
-    }
-
-    // get pointer to the lump we want
-    filelump_t *lump_p = filelumps + lump;
-
-    // seek to position of lump in file
-    if (fseek(fp, lump_p->filepos, SEEK_SET) != 0 && ferror(fp)) {
-        perror("seek error while reading lump");
-        return -1;
-    }
-
-    // read lump data to destination buffer
-    if (fread(dest, lump_p->size, 1, fp) != 1) {
-        // check errors
-        if (feof(fp)) {
-            perror("premature end of file");
-        } else if (ferror(fp)) {
-            perror("error reading lump data");
-        }
-
-        return -1;
-    }
-
-    return 0;
+const wad::Wad_type& wad::Wad_file::type() const
+{
+    return type_;
 }
 
-int write_lump(const uint32_t lump, FILE *file) {
-    // check for valid lump number
-    if (lump >= numlumps) {
-        fprintf(stderr, "invalid lump %u\n", lump);
-        return -1;
-    }
-
-    // get pointer to the lump we want
-    filelump_t *lump_p = filelumps + lump;
-
-    // allocate buffer to hold lump data
-    void *buf = malloc(lump_p->size);
-    if (!buf) {
-        fprintf(stderr, "unable to allocate memory for lump\n");
-        return -1;
-    }
-
-    // read lump data into buffer
-    if (read_lump(buf, lump) == -1) {
-        free(buf);
-        buf = nullptr;
-
-        fprintf(stderr, "unable to load lump %u for writing\n", lump);
-        return -1;
-    }
-
-    // write buffer to file
-    if (fwrite(buf, lump_p->size, 1, file) != 1) {
-        // check errors
-        if (feof(file)) {
-            perror("premature end of file");
-        } else if (ferror(file)) {
-            perror("error writing lump data");
-        }
-
-        // cleanup
-        if (buf) {
-            free(buf);
-            buf = nullptr;
-        }
-
-        return -1;
-    }
-
-    // cleanup
-    if (buf) {
-        free(buf);
-        buf = nullptr;
-    }
-
-    return 0;
+bool wad::operator==(const Wad_file& lhs, const Wad_file& rhs)
+{
+    // for now just use the filename
+    return lhs.filename() == rhs.filename();
 }
 
-int valid_wad(const char *id) {
-    return strncmp(id, "IWAD", WAD_ID_SZ) && strncmp(id, "PWAD", WAD_ID_SZ);
-}
-
-int get_lump_num(const char *name) {
-    // linear search for given lump name
-    for (size_t i = 0; i < numlumps; i++) {
-        if (strncmp(filelumps[i].name, name, strlen(name)) == 0) {
-            return i;
-        }
+std::ostream& wad::operator<<(std::ostream& os, const Wad_file& wad_file)
+{
+    os << "Type:\t";
+    switch (wad_file.type()) {
+    case wad::Wad_type::iwad:
+        os << nm_iwad << '\n';
+        break;
+    case wad::Wad_type::pwad:
+        os << nm_pwad << '\n';
+        break;
     }
 
-    // not found
-    return -1;
+    return os << "Lumps:\t" << wad_file.wadinfo().num_lumps << '\n'
+        << "Ofs:\t" << wad_file.wadinfo().info_table_offset << '\n';
 }
-
-void list_lumps() {
-    for (size_t i = 0; i < numlumps; i++) {
-        printf("name: %.*s, size: %d, offset: %d\n", LUMP_NAME_SZ, filelumps[i].name, filelumps[i].size, filelumps[i].filepos);
-    }
-}
-*/

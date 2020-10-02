@@ -5,12 +5,15 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <vector>
+//#include <vector>
 
 namespace wad
 {
     constexpr std::size_t sz_wad_id{4}; /* wad file id length */
     constexpr std::size_t sz_lump_name{8}; /* lump name max-length */
+
+    const std::string_view nm_iwad{"IWAD"};
+    const std::string_view nm_pwad{"PWAD"};
 
     enum class Wad_type { iwad, pwad };
 
@@ -35,18 +38,20 @@ namespace wad
     public:
         Wad_file(const std::string& filename);
 
-        const std::string& filename() const;
-
-        //TODO: void print_lump_directory();
+        std::string_view filename() const;
+        std::string_view id() const;
+        const Wadinfo& wadinfo() const;
+        const Wad_type& type() const;
     private:
-        //TODO: bool valid_type();
-
         std::string filename_; /* full path to file */
         std::ifstream fp_; /* underlying file stream */
-        //Wadinfo wadinfo;
+        Wadinfo wadinfo_;
         //std::vector<Filelump> lump_directory;
-        //Wad_type type;
+        Wad_type type_;
     };
+
+    bool operator==(const Wad_file& lhs, const Wad_file& rhs);
+    std::ostream& operator<<(std::ostream& os, const Wad_file& wad_file);
 }
 
 #endif
