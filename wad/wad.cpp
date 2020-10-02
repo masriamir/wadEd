@@ -1,8 +1,8 @@
 #include "wad.h"
 
-wad::Wad_file::Wad_file(const std::string& filename) : filename{filename}, fp{filename, std::ios::binary}
+wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{filename, std::ios::binary}
 {
-    if (!fp) {
+    if (!fp_) {
         throw std::runtime_error{"could not open " + filename};
     }
 
