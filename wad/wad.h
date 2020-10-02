@@ -34,6 +34,9 @@ namespace wad
     {
     public:
         Wad_file(const std::string& filename);
+
+        const std::string& filename() const;
+
         //TODO: void print_lump_directory();
     private:
         //TODO: bool valid_type();

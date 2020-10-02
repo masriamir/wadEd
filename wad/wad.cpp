@@ -5,8 +5,11 @@ wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{
     if (!fp_) {
         throw std::runtime_error{"could not open " + filename};
     }
+}
 
-    std::cout << "loaded " << filename << "\n";
+const std::string& wad::Wad_file::filename() const
+{
+    return filename_;
 }
 
 /*TODO: refactor

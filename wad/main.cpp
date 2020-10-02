@@ -1,5 +1,7 @@
 #include "wad.h"
 
+using namespace std;
+
 int main(const int argc, const char* argv[])
 {
     std::ios_base::sync_with_stdio(false);
@@ -7,9 +9,11 @@ int main(const int argc, const char* argv[])
     if (argc > 1) {
         try {
             wad::Wad_file wad_file{std::string{argv[1]}};
+
+            cout << "loaded " << wad_file.filename() << '\n';
         }
         catch (const std::exception& e) {
-            std::cerr << e.what();
+            cerr << e.what();
             return 1;
         }
     }
