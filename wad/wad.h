@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-//#include <vector>
+#include <vector>
 
 namespace wad
 {
@@ -42,12 +42,13 @@ namespace wad
         std::string_view id() const;
         const Wadinfo& wadinfo() const;
         const Wad_type& type() const;
+        const std::vector<Filelump>& lumps() const;
     private:
         std::string filename_; /* full path to file */
         std::ifstream fp_; /* underlying file stream */
         Wadinfo wadinfo_;
-        //std::vector<Filelump> lump_directory;
         Wad_type type_;
+        std::vector<Filelump> lump_directory_;
     };
 
     bool operator==(const Wad_file& lhs, const Wad_file& rhs);

@@ -18,6 +18,14 @@ wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{
     else {
         throw std::runtime_error{"Not a valid WAD."};
     }
+
+    fp_.seekg(wadinfo_.info_table_offset);
+
+    Filelump lump{};
+    while (!fp_.eof()) {
+        fp_.read(reinterpret_cast<char*>(&lump), sizeof(Filelump));
+        lump_directory_.push_back(lump);
+    }
 }
 
 std::string_view wad::Wad_file::filename() const
@@ -40,6 +48,11 @@ const wad::Wad_type& wad::Wad_file::type() const
     return type_;
 }
 
+const std::vector<wad::Filelump>& wad::Wad_file::lumps() const
+{
+    return lump_directory_;
+}
+
 bool wad::operator==(const Wad_file& lhs, const Wad_file& rhs)
 {
     // for now just use the filename
@@ -58,6 +71,13 @@ std::ostream& wad::operator<<(std::ostream& os, const Wad_file& wad_file)
         break;
     }
 
-    return os << "Lumps:\t" << wad_file.wadinfo().num_lumps << '\n'
-        << "Ofs:\t" << wad_file.wadinfo().info_table_offset << '\n';
+    os << "Lumps:\t" << wad_file.wadinfo().num_lumps << '\n' << "Ofs:\t" << wad_file.wadinfo().info_table_offset << "\n\n";
+
+    os << "Lump Name\t" << "Size\t" << "Offset\n";
+
+    for (auto lump : wad_file.lumps()) {
+        os << std::string_view{lump.name.data(), sz_lump_name} << '\t' << lump.size << '\t' << lump.offset << '\n';
+    }
+
+    return os;
 }
