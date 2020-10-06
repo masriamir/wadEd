@@ -3,6 +3,7 @@
 
 #include <array>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -31,6 +32,8 @@ namespace wad
         int offset; /* offset to lump data in file */
         int size; /* bytes */
         std::array<char, sz_lump_name> name; /* not ALWAYS null-terminated */
+
+        std::string_view lump_name() const;
     };
 
     class Wad_file
@@ -51,8 +54,12 @@ namespace wad
         std::vector<Filelump> lump_directory_;
     };
 
+    // Wad_file operators
     bool operator==(const Wad_file& lhs, const Wad_file& rhs);
     std::ostream& operator<<(std::ostream& os, const Wad_file& wad_file);
+
+    // Filelump operators
+    std::ostream& operator<<(std::ostream& os, const Filelump& lump);
 }
 
 #endif

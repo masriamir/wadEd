@@ -1,5 +1,10 @@
 #include "wad.h"
 
+std::string_view wad::Filelump::lump_name() const
+{
+    return std::string_view{name.data(), sz_lump_name};
+}
+
 wad::Wad_file::Wad_file(const std::string& filename) : filename_{filename}, fp_{filename, std::ios::binary}, wadinfo_{},
                                                        type_{}
 {
@@ -71,13 +76,24 @@ std::ostream& wad::operator<<(std::ostream& os, const Wad_file& wad_file)
         break;
     }
 
-    os << "Lumps:\t" << wad_file.wadinfo().num_lumps << '\n' << "Ofs:\t" << wad_file.wadinfo().info_table_offset << "\n\n";
+    os << "Lumps:\t" << wad_file.wadinfo().num_lumps << '\n'
+        << "Offs:\t" << wad_file.wadinfo().info_table_offset
+        << "\n\n"
+        << "Lump Name\t" << "Size\t" << "Offset\n"
+        << "--------------------------------\n";
 
-    os << "Lump Name\t" << "Size\t" << "Offset\n";
-
-    for (auto lump : wad_file.lumps()) {
-        os << std::string_view{lump.name.data(), sz_lump_name} << '\t' << lump.size << '\t' << lump.offset << '\n';
+    for (const auto& lump : wad_file.lumps()) {
+        os << lump << '\n';
     }
 
     return os;
+}
+
+std::ostream& wad::operator<<(std::ostream& os, const Filelump& lump)
+{
+    //TODO: fix column formatting
+    return os
+        << std::left << std::setw(16) << lump.lump_name()
+        << std::setw(8) << lump.size
+        << lump.offset;
 }
