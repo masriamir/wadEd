@@ -10,8 +10,8 @@ int main(const int argc, const char* argv[])
         try {
             const wad::Wad_file wad_file{std::string{argv[1]}};
 
-            cout << "Loaded:\t" << wad_file.filename() << '\n';
-            cout << wad_file;
+            cout << "Loaded:\t" << wad_file.filename() << "\n\n"
+                << wad_file << '\n';
         }
         catch (const std::exception& e) {
             cerr << e.what();
