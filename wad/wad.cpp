@@ -93,7 +93,7 @@ std::ostream& wad::operator<<(std::ostream& os, const Filelump& lump)
 {
     //TODO: fix column formatting
     return os
-        << std::left << std::setw(16) << lump.lump_name()
-        << std::setw(8) << lump.size
+        << std::left << std::setw(wd_lump_name) << lump.lump_name()
+        << std::setw(wd_lump_size) << lump.size
         << lump.offset;
 }

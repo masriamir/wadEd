@@ -13,6 +13,9 @@ namespace wad
     constexpr std::size_t sz_wad_id{4}; /* wad file id length */
     constexpr std::size_t sz_lump_name{8}; /* lump name max-length */
 
+    constexpr std::size_t wd_lump_name{16}; /* lump name column width */
+    constexpr std::size_t wd_lump_size{8}; /* lump size column width */
+
     const std::string_view nm_iwad{"IWAD"};
     const std::string_view nm_pwad{"PWAD"};
 
