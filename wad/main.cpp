@@ -1,22 +1,22 @@
-#include <stdlib.h>
-#include <stdio.h>
-
 #include "wad.h"
 
-int main(int argc, char *argv[]) {
+using namespace std;
+
+int main(const int argc, const char* argv[])
+{
+    std::ios_base::sync_with_stdio(false);
+
     if (argc > 1) {
-        /* load wad file into memory */
-        if (load_wad(argv[1]) == -1) {
-            fprintf(stderr, "unable to read wad\n");
-            exit(EXIT_FAILURE);
+        try {
+            const wad::Wad_file wad_file{std::string{argv[1]}};
+
+            cout << "Loaded:\t" << wad_file.filename() << "\n\n"
+                << wad_file << '\n';
         }
-
-        /* list file lump info table */
-        list_lumps();
-        printf("found %u lumps\n", numlumps);
-
-        /* cleanup */
-        free_wad();
+        catch (const std::exception& e) {
+            cerr << e.what();
+            return 1;
+        }
     }
 
     return 0;

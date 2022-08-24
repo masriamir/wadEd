@@ -1,43 +1,68 @@
 #ifndef CUMIN_WAD_H
 #define CUMIN_WAD_H
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <array>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+#include <string>
+#include <vector>
 
-#define WAD_ID_SZ 4 /* wad file id length */
-#define LUMP_NAME_SZ 8 /* lump name length */
+namespace wad
+{
+    constexpr std::size_t sz_wad_id{4}; /* wad file id length */
+    constexpr std::size_t sz_lump_name{8}; /* lump name max-length */
 
-/* wad file header */
-typedef struct wadinfo_t {
-    char identification[WAD_ID_SZ];
-    uint32_t numlumps;
-    int32_t infotableofs;
-} wadinfo_t;
+    constexpr std::size_t wd_lump_name{16}; /* lump name column width */
+    constexpr std::size_t wd_lump_size{8}; /* lump size column width */
 
-/* lump info directory entry */
-typedef struct filelump_t {
-    int32_t filepos;
-    int32_t size;
-    char name[LUMP_NAME_SZ];
-} filelump_t;
+    const std::string_view nm_iwad{"IWAD"};
+    const std::string_view nm_pwad{"PWAD"};
 
-extern FILE *fp; /* wad file */
-extern uint32_t numlumps; /* number of lumps in wad */
-extern filelump_t *filelumps; /* lump info directory */
+    enum class Wad_type { iwad, pwad };
 
-/* allocation and cleanup */
-int load_wad(const char *);
-void free_wad(void);
+    // wad file header
+    struct Wadinfo
+    {
+        std::array<char, sz_wad_id> identification; /* "PWAD" or "IWAD" */
+        int num_lumps; /* number of lumps in WAD */
+        int info_table_offset; /* offset to lump info directory in file */
+    };
 
-/* io */
-int read_lump(void *, const uint32_t);
-int write_lump(const uint32_t, FILE *);
+    // lump info directory entry
+    struct Filelump
+    {
+        int offset; /* offset to lump data in file */
+        int size; /* bytes */
+        std::array<char, sz_lump_name> name; /* not ALWAYS null-terminated */
 
-/* utility */
-int valid_wad(const char *);
-int get_lump_num(const char *);
-void list_lumps(void);
+        std::string_view lump_name() const;
+    };
+
+    class Wad_file
+    {
+    public:
+        Wad_file(const std::string& filename);
+
+        std::string_view filename() const;
+        std::string_view id() const;
+        const Wadinfo& wadinfo() const;
+        const Wad_type& type() const;
+        const std::vector<Filelump>& lumps() const;
+    private:
+        std::string filename_; /* full path to file */
+        std::ifstream fp_; /* underlying file stream */
+        Wadinfo wadinfo_;
+        Wad_type type_;
+        std::vector<Filelump> lump_directory_;
+    };
+
+    // Wad_file operators
+    bool operator==(const Wad_file& lhs, const Wad_file& rhs);
+    std::ostream& operator<<(std::ostream& os, const Wad_file& wad_file);
+
+    // Filelump operators
+    std::ostream& operator<<(std::ostream& os, const Filelump& lump);
+}
 
 #endif
